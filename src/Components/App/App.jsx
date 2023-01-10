@@ -9,18 +9,18 @@ import Register from "../Register/Register";
 import Login from "../Login/Login";
 import * as Auth from "../../utils/Auth";
 function App() {
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
   function handleRegistr(email, password) {
     Auth.register(email, password).then((res) => {
       navigate("/sign-in", { replace: true });
     });
   }
-  function handleLogin(email , password) {
-    Auth.authorize(email , password)
+  function handleLogin(email, password) {
+    Auth.authorize(email, password)
       .then(() => {
-        setLoggedIn(true)
-        navigate("/ducks" , {replace : true});
+        setLoggedIn(true);
+        navigate("/ducks", { replace: true });
       })
       .catch((err) => {
         if (err.status === 400) {
@@ -28,15 +28,15 @@ function App() {
         } else if (err.status === 401) {
           console.log("401 - пользователь с email не найден");
         }
-      })
+      });
   }
   return (
     <div className="App">
       <Header />
       <Routes>
         <Route element={<ProtectedRoute />}>
-          <Route path="/ducks" element={<DuckList/>} />
-          <Route path="/my-profile" element={<MyProfile/>} />
+          <Route path="/ducks" element={<DuckList />} />
+          <Route path="/my-profile" element={<MyProfile />} />
         </Route>
         <Route
           path="/sign-up"
