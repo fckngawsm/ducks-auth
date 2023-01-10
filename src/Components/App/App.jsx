@@ -1,7 +1,7 @@
 import "../App/App.css";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import ProtectedRoute from "../ProtectedRoute";
+import { useEffect, useState } from "react";
+import ProtectedRoute from "../../utils/ProtectedRoute";
 import DuckList from "../DuckList/DuckList";
 import Header from "../Header/Header";
 import MyProfile from "../MyProfile/MyProfile";
@@ -20,7 +20,7 @@ function App() {
     Auth.authorize(email, password)
       .then(() => {
         setLoggedIn(true);
-        navigate("/ducks", { replace: true });
+        navigate("/", { replace: true });
       })
       .catch((err) => {
         if (err.status === 400) {
@@ -32,19 +32,24 @@ function App() {
   }
   return (
     <div className="App">
-      <Header />
       <Routes>
-        <Route element={<ProtectedRoute />}>
-          <Route path="/ducks" element={<DuckList />} />
-          <Route path="/my-profile" element={<MyProfile />} />
-        </Route>
+        <Route
+          exact
+          path="/"
+          element={
+            <ProtectedRoute loggedIn={loggedIn}>
+              <Header />
+              <DuckList />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/sign-up"
           element={<Register onRegister={handleRegistr} />}
         />
         <Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
-        <Route
-          path="/"
+        {/* <Route
+          path="/ducks"
           element={
             loggedIn ? (
               <Navigate to="/ducks" replace />
@@ -52,7 +57,7 @@ function App() {
               <Navigate to="/sign-up" replace />
             )
           }
-        />
+        /> */}
       </Routes>
     </div>
   );

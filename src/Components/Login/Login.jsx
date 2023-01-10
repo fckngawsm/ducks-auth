@@ -17,7 +17,7 @@ export default function Login({ onLogin }) {
         или зарегистрируйтесь, чтобы получить доступ к CryptoDucks.
       </p>
       <form className="login__form" onSubmit={handleSubmit}>
-        <label for="username">Email:</label>
+        <label htmlFor="username">Email:</label>
         <input
           id="username"
           required
@@ -26,7 +26,7 @@ export default function Login({ onLogin }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <label for="password">Пароль:</label>
+        <label htmlFor="password">Пароль:</label>
         <input
           id="password"
           required

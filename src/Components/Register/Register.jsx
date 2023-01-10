@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Logo from "../Logo/Logo";
 import "../Register/Register.css";
 export default function Register({ onRegister }) {
@@ -12,7 +13,7 @@ export default function Register({ onRegister }) {
     <div className="register">
       <Logo />
       <form className="register__form" onSubmit={handleSubmit}>
-        <label for="email">Email:</label>
+        <label htmlFor="email">Email:</label>
         <input
           id="email"
           name="email"
@@ -20,7 +21,7 @@ export default function Register({ onRegister }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <label for="password">Пароль:</label>
+        <label htmlFor="password">Пароль:</label>
         <input
           id="password"
           name="password"
@@ -34,7 +35,9 @@ export default function Register({ onRegister }) {
       </form>
       <div className="register__signin">
         <p>Уже зарегистрированы?</p>
-        {/* <Link to="login" className="register__login-link">Войти</Link> */}
+        <Link to="sign-in" className="register__login-link">
+          Войти
+        </Link>
       </div>
     </div>
   );
