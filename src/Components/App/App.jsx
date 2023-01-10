@@ -10,6 +10,7 @@ import Login from "../Login/Login";
 import * as Auth from "../../utils/Auth";
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [userData, setUserData] = useState({});
   const navigate = useNavigate();
   function handleRegistr(email, password) {
     Auth.register(email, password).then((res) => {
@@ -30,6 +31,31 @@ function App() {
         }
       });
   }
+  //Хук для проверки токена при каждом монтировании компонента App
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+    console.log(jwt)
+    if (jwt) {
+      Auth.checkToken(jwt)
+        .then((res) => {
+          if (res) {
+            const userData = {
+              username: res.username,
+              email: res.email,
+            };
+            setLoggedIn(true);
+            setUserData(userData);
+            navigate("/", { replace: true });
+          }
+        })
+        .catch((err) => {
+          if (err.status === 401) {
+            console.log("401 — Токен не передан или передан не в том формате");
+          }
+          console.log("401 — Переданный токен некорректен");
+        });
+    }
+  }, [navigate]);
   return (
     <div className="App">
       <Routes>
