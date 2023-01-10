@@ -8,14 +8,6 @@
     margin: 100px auto 0;
 }
 
-.register__welcome {
-    margin-top: 32px;
-}
-
-.register__error {
-    color: #02FF00;
-}
-
 .register__form {
     display: flex;
     flex-direction: column;

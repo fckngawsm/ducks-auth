@@ -14,10 +14,6 @@
     margin: 50px auto 10px;
 }
 
-.login__error {
-    color: #02FF00;
-}
-
 .login__form {
     display: flex;
     flex-direction: column;
@@ -43,21 +39,6 @@
     text-align: center;
     margin-top: 32px;
     cursor: pointer;
-}
-
-.login__signup {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 32px;
-}
-
-.login__signup p {
-    margin-right: 12px;
-}
-
-.signup__link {
-    color: white;
 }
 
 .login__button-container {
