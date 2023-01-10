@@ -1,5 +1,5 @@
 import "../App/App.css";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ProtectedRoute from "../../utils/ProtectedRoute";
 import DuckList from "../DuckList/DuckList";
@@ -10,8 +10,20 @@ import Login from "../Login/Login";
 import * as Auth from "../../utils/Auth";
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userData, setUserData] = useState({});
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  //Хук для проверки токена при каждом монтировании компонента App
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+    if (!jwt) return;
+    Auth.checkToken(jwt)
+      .then((res) => {
+        setEmail(res.data.email);
+        setLoggedIn(true);
+        navigate("/", { replace: false });
+      })
+      .catch((err) => console.log(err));
+  }, []);
   function handleRegistr(email, password) {
     Auth.register(email, password).then((res) => {
       navigate("/sign-in", { replace: true });
@@ -31,41 +43,30 @@ function App() {
         }
       });
   }
-  //Хук для проверки токена при каждом монтировании компонента App
-  useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
-    console.log(jwt)
-    if (jwt) {
-      Auth.checkToken(jwt)
-        .then((res) => {
-          if (res) {
-            const userData = {
-              username: res.username,
-              email: res.email,
-            };
-            setLoggedIn(true);
-            setUserData(userData);
-            navigate("/", { replace: true });
-          }
-        })
-        .catch((err) => {
-          if (err.status === 401) {
-            console.log("401 — Токен не передан или передан не в том формате");
-          }
-          console.log("401 — Переданный токен некорректен");
-        });
-    }
-  }, [navigate]);
+  function handleLogout() {
+    localStorage.removeItem("jwt");
+    navigate("/sign-up", { replace: true });
+    setEmail("");
+    setLoggedIn(false);
+  }
+
   return (
     <div className="App">
       <Routes>
         <Route
-          exact
           path="/"
           element={
             <ProtectedRoute loggedIn={loggedIn}>
-              <Header />
+              <Header onLogout={handleLogout} />
               <DuckList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/my-profile"
+          element={
+            <ProtectedRoute loggedIn={loggedIn}>
+              <MyProfile email={email} />
             </ProtectedRoute>
           }
         />
@@ -74,16 +75,6 @@ function App() {
           element={<Register onRegister={handleRegistr} />}
         />
         <Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
-        {/* <Route
-          path="/ducks"
-          element={
-            loggedIn ? (
-              <Navigate to="/ducks" replace />
-            ) : (
-              <Navigate to="/sign-up" replace />
-            )
-          }
-        /> */}
       </Routes>
     </div>
   );
